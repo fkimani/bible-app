@@ -1,1 +1,3 @@
 bible-sqlite.db
+env/*
+.vscode/
