@@ -1,3 +1,4 @@
 bible-sqlite.db
 env/*
-.vscode/
+.vscode/ 
+__pycache__/
