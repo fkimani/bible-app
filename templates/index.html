@@ -1,4 +1,25 @@
 <form method="GET" action="/results">
+    <label for="idsearch">Search by ID:</label>
     <input type="text" name="id" placeholder="01001001" id="ID" maxlength="8">
+    <br />
+    <label for="books">Choose a Book:</label>
+    <select id="books" name="books">
+        {% for book in books %}
+        <option value="{{ book }}">{{ book }}</option>
+        {% endfor %}
+    </select>
+    <label for="chapter">Chapter:</label>
+    <select id="chapter" name="chapter">
+        {% for chap in chapters %}
+        <option value="{{ chap }}">{{ chapters }}</option>
+        {% endfor %}
+    </select>
+    <label for="verse">Verse:</label>
+    <select id="verse" name="verse">
+        {% for vs in verses %}
+        <option value="{{ vs }}">{{ verse }}</option>
+        {% endfor %}
+    </select>
+    
     <input type="submit" id="submit_btn" onClick="runner()">
 </form>
