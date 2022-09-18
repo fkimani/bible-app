@@ -1,25 +1,25 @@
 <form method="GET" action="/results">
-    <label for="idsearch">Search by ID:</label>
-    <input type="text" name="id" placeholder="01001001" id="ID" maxlength="8">
-    <br />
-    <label for="books">Choose a Book:</label>
-    <select id="books" name="books">
+    <!-- <label for="idsearch">Search by ID:</label> -->
+    <!-- <input type="text" name="id" placeholder="01001001" id="ID" maxlength="8"> -->
+    <!-- <br /> -->
+    <label for="book_label">Choose a Book:</label>
+    <select id="bk" name="bk">
         {% for book in books %}
         <option value="{{ book }}">{{ book }}</option>
         {% endfor %}
     </select>
     <label for="chapter">Chapter:</label>
-    <select id="chapter" name="chapter">
-        {% for chap in chapters %}
-        <option value="{{ chap }}">{{ chapters }}</option>
+    <select id="ch" name="ch">
+        {% for ch in range(1,chaptercount) %}
+        <option value="{{ch}}">{{ch}}</option>
         {% endfor %}
     </select>
     <label for="verse">Verse:</label>
-    <select id="verse" name="verse">
-        {% for vs in verses %}
-        <option value="{{ vs }}">{{ verse }}</option>
+    <select id="vs" name="vs">
+        {% for vs in range(1,versecount) %}
+        <option value="{{vs}}">{{vs}}</option>
         {% endfor %}
     </select>
-    
+
     <input type="submit" id="submit_btn" onClick="runner()">
 </form>

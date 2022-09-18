@@ -71,19 +71,12 @@ def search_keyword(keyword):
         return "ERROR: must provide keyword."
     else:
         print(f'Searching for "{keyword}"...')
-        return printer(cur.execute(f'SELECT * FROM t_kjv  where t like "%{keyword}%" ') )
+        return cur.execute(f'SELECT * FROM t_kjv  where t like "%{keyword}%" ')
         # needs some work
         # return get_list(cur.execute(f'SELECT * FROM t_kjv  where t like "%{keyword}%" '))
-        # for r in result:
-        #     if r == None:
-        #         print(f'{keyword} not found')
-        #         return 
-        #     print(r)
-        #     print(f'{keyword} found')
-        #     return result  
+
 # get bookname:
 def get_bookname(bookid):
-    # book = booklist[bk][1]
     if bookid == 0 or bookid > 66:
         return "error: bad input. cannot be <0 or >66"
     return get_booklist()[bookid-1]
@@ -93,15 +86,15 @@ def printer(myfunc):
     for item in myfunc:
         print(item)
     
-# iterate and add to list
+# iterate and add to list - needs work
 def get_list(myfunc):
     l = []
     for item in myfunc:
-        i = f'{get_bookname(item[1])}:{item[2]}:{item[3]}: {item[4]}'
-        print(i)
-        l.append(i)
-    return 
+        l.append(item)
+    return l
 
+
+# test functions:
 # printer(get_table_count())
 # printer(get_tables())
 # printer(get_versions())
@@ -109,12 +102,13 @@ def get_list(myfunc):
 # printer(get_bible_book_one(bookid))
 # printer(get_bible_book_one('1'))
 
+
 # try cmd in variables
-book_info = "book_info"
-bi = cur.execute(f'SELECT * FROM {book_info}' ) 
-# printer(bi)
-bible_version_key = "bible_version_key"
-bvk = cur.execute(f'SELECT * FROM {bible_version_key}')
+# book_info = "book_info"
+# bi = cur.execute(f'SELECT * FROM {book_info}' ) 
+# # printer(bi)
+# bible_version_key = "bible_version_key"
+# bvk = cur.execute(f'SELECT * FROM {bible_version_key}')
 # printer(bvk)
 
 # warning: cross reference is a lot of data -- LIMIT 50
@@ -161,9 +155,38 @@ bvk = cur.execute(f'SELECT * FROM {bible_version_key}')
 # keyword = "in the beginning "
 # kw = cur.execute(f'SELECT * FROM t_kjv  where t like "%{keyword}%" ')  
 # printer(kw)
-keyword = "Blessed are the "
-# printer(search_keyword(keyword))
-print(search_keyword(keyword))
+
 
 # bookid = 0
 # print(get_bookname(bookid))
+# 
+# keyword = "Blessed are the "
+# printer(search_keyword(keyword))
+# get_list(search_keyword(keyword))
+
+# GET INFO:
+# book_info = "book_info"
+# bi = cur.execute(f'SELECT * FROM {book_info}' ) 
+# for b in bi:
+#     # print(b[len(b)-1])
+#     # print(b)
+
+# chapter count all
+def chapter_count_all():
+    l = []
+    chapter_count = cur.execute(f'SELECT * FROM book_info;' ) 
+    for chapters in chapter_count:
+        l.append(chapters)
+    return l
+
+# chapter count in a book
+def chapter_count(book):
+    book_position = get_booklist().index(book)
+    return chapter_count_all()[book_position][6]
+
+bk = "Genesis"
+print(chapter_count(bk))
+# print(chapter_count_all())
+
+
+
