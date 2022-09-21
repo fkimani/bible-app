@@ -113,11 +113,13 @@ def results():
         kw_len = len(kw_result)
         print(f'Keyword Search result: {kw_input}; {kw_len}') 
     elif id_input != '':
+        kw_len = 0
         searchtext = id_input 
         searchresult = dropdown_search(id_input)
         print(f' "{id_input}" search result: {searchresult}')
     else:
         #default is dropdown search
+        kw_len = 0
         searchtext = f'{bk_input} {ch_input}:{vs_input}'
         print(f'searchtext: {searchtext}')
         bk_id = book_id(bk_input)
