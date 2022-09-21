@@ -1,7 +1,15 @@
-<h1>Bible Search App</h1> 
-<p>
-<h2>Search results for {{ searchtext }}</h2> {{ results }}</p>
-<p>
+<h1>Bible Search App</h1>
+    <p><h2>Search results for "{{ searchtext }}"</h2> {{ results }}</p>
+    <br/>
+    <p><h2>{{ kw_len}} Keyword Search results for "{{ kw_input }}":</h2> 
+        {% for kwr in kw_result %}
+            {{kwr}} <br/>
+        {% endfor %}
+    </p>
+    <!-- <p><h2>ID Search results for {{ id_input }}</h2> 
+        {{id_result}} -->
     
+    </p>
+    <br/>
 <p><input type="submit" name="refine" value="Refine Search" onclick="javascript:history.back()">
-    <input type="submit" name="newsearch" value="New Search" onclick="location.href='/'"></p>
+<input type="submit" name="newsearch" value="New Search" onclick="location.href='/'"></p>
