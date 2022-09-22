@@ -4,4 +4,4 @@ env/*
 __pycache__/
 results.py
 utilities.py
-app-test.py
+*_test.py

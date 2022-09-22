@@ -1,5 +1,11 @@
 <form method="GET" action="/results">
     <p><label>Dropdown Search </label>| <label>Keyword Search </label> | <label>ID Search(Advanced) </label></p>
+    <label for="sel_ver">Select Version:</label>
+    <select id="ver" name="version">
+        {% for v in versions %}
+        <option value="{{v[1]}}">{{v[2]}}: {{ v[4] }}</option>
+        {% endfor %}
+    </select>
     <h2>Dropdown Search:</h2>
     <label for="book_label">Book:</label>
     <select id="bk" name="bk">
