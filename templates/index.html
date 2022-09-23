@@ -1,4 +1,4 @@
-<title>Search App - Welcome</title>
+<title>Search App Home</title>
 <form method="GET" action="/results">
     <p><label>Dropdown Search </label>| <label>Keyword Search </label> | <label>ID Search(Advanced) </label></p>
     <label for="sel_ver">Select Version:</label>
@@ -29,6 +29,7 @@
     </select>
     <label for="verse_end">To:</label>
     <select id="vs_end" name="vs_end">
+        <option value="0"></option>
         {% for vs in range(1,versecount) %}
         <option value="{{vs}}">{{vs}}</option>
         {% endfor %}
@@ -44,5 +45,5 @@
     </p>
     <br />
     <br/>
-    <input type="submit" id="submit_btn" onClick="runner()">
+    <input type="submit" id="submit_btn" onclick="runner()">
 </form>
