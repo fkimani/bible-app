@@ -5,19 +5,24 @@
     <p><input type="submit" name="refine" value="Refine Search" onclick="javascript:history.back()">
         <input type="submit" name="newsearch" value="New Search" onclick="location.href='/'"></p>
     <p>
-    <h2>{{kw_len}} keyword search results for "{{ kw_input }}" on {{bk_version_nm}}:</h2>
-    {% for kwr in kw_result %}
+    <h2>{{kw_len}} keyword search results for "{{ searchtext }}" on {{bk_version_nm}}:</h2>
+    {% for kwr in results %}
     {{kwr}} <br />
     {% endfor %}
     </p>
 </div>
+{% elif '-' in bcv %}
+    <p>
+    <h2>Default Search results for "{{bcv}}" in <i>{{bk_version_nm}}</i></h2> 
+            {{results}}<br/>
+    </p>
 {% else %}
-<p>
-<h2>Search results for "{{bcv}}" in <i>{{bk_version_nm}}</i></h2> 
-    {% for re in results %}
-        {{re}}<br/>
-    {% endfor %}
-</p>
+    <p>
+    <h2>Search results for "{{bcv}}" in <i>{{bk_version_nm}}</i></h2> 
+        {% for re in results %}
+            {{re}}<br/>
+        {% endfor %}
+    </p>
 {% endif %}
 
 <br />

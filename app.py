@@ -53,19 +53,17 @@ def get_version_abbrev(vsn):
         if vsn in a[1]:
             abbrev = a[2]
     return abbrev
-# KEYWORD search:
+# KEYWORD search: vsn default set in frontend (t_kjv)
 def keyword_search(kw_input,bk_version):
     kw_result = []
     kresult = []
-    # version = 't_kjv' #default version for now
     cmd = f'SELECT * FROM {bk_version} WHERE T LIKE "%{kw_input}%" '
     cur = db_conn()
     kw_search = cur.execute(cmd)
     for k in kw_search.fetchall():
         k1 = bookname(k[1])
-        # print(f'k1 is ... {k1}')
         kw_result.append(f'{k1} {k[2]}:{k[3]} {k[4]}')
-    print(f'"{kw_input}" result count: {len(kw_result)}')
+    print(f'keyword "{kw_input}" result count: {len(kw_result)}')
     for count, i in enumerate(kw_result):
         count +=1
         kresult.append(f'{count}.) {i}')
@@ -77,19 +75,22 @@ def dropdown_search(id_input, bk_version):
     if len(id_input) != 8:
         raise ValueError(f'"{id_input}" has incorrect length of {len(id_input)}')
     else:
+        print(f'Dropdown single verse search. {id_input}')
         cur = db_conn()
         cmd = f'SELECT * from {bk_version} where id = {id_input}'  
         result = cur.execute(cmd)
         id_rslt = result.fetchone()
+        id_result = [] # try me delete me if fail
         id_result = f'{bookname(id_rslt[1])} {id_rslt[2]}:{id_rslt[3]}: {id_rslt[4]}'
     return id_result
-# DROPDOWN search for verse range 
-def dropdown_range_search(id_input1,id_input2):
+# DROPDOWN search - verse range 
+def dropdown_range_search(id_input1,id_input2,bk_version):
     cur = db_conn()
     if len(id_input1) != 8 or len(id_input2) != 8:
         raise ValueError(f'id has incorrect length.')
     else:
-        cmd = f'SELECT * from t_kjv where id BETWEEN {id_input1} AND {id_input2} '  
+        print(f'Dropdown multi verse search. {id_input1} - {id_input2}')
+        cmd = f'SELECT * from {bk_version} where id BETWEEN {id_input1} AND {id_input2} '  # vs range
         result = cur.execute(cmd)
         id_rslt = result.fetchall()
         id_result = []
@@ -113,7 +114,6 @@ def get_bcv(id_input):
 def get_bkcode(searchtext):
     # convert vars to searchable 8 digit ids
     print(f'get_bkcode searchtext: {searchtext}')
-    print(f'get_bkcode searchtext type: {type(searchtext)}')
     r = f"{searchtext['bk']} {searchtext['ch']}:{searchtext['vs']}" 
     bid = book_id(searchtext['bk'])
     cid = chapter_id(searchtext['ch'])
@@ -137,79 +137,79 @@ def search():
 # results route
 @app.route('/results', methods=['GET'])
 def results():
-    kw_result = []
     print("Results page...")
-    # 1. kw search. TODO: wrap in func
-    kw_input = request.args.get('kw')
-    # kw_result = keyword_search(kw_input)
+    # TODO: can reduce the vars
     searchtext = ''
-    searchresult = ''
+    searchresult = []
     id_input = ''
     id_result = ''
     kw_len = ''
-    bcv=''
+    bcv = ''
+    # TODO: if can abstract some of it in func or put vars in dict
+    # results object vars
+    kw_input = request.args.get('kw')
     bk_version = request.args.get('version')
     bk_version_nm = get_version_abbrev(bk_version)
-    # 2. dropdown search
     bk_input = request.args.get('bk')
     ch_input = request.args.get('ch')
     vs_input = request.args.get('vs')
     vs_end_input = request.args.get('vs_end')
+    id_input = request.args.get('id')
+    # format vars 
+    bk_id = book_id(bk_input)
+    ch_id = chapter_id(ch_input)
+    vs_id = chapter_id(vs_input)
+    vs_end_id = chapter_id(vs_end_input)
+    # if dropdown vrs range
     if vs_end_input != '0':
         bcv = f'{bk_input} {ch_input}:{vs_input}-{vs_end_input}'
+        print(f'Multi-verse search for: {bcv}')
     else:
         bcv = f'{bk_input} {ch_input}:{vs_input}'
-    print(f'bcv var is {bcv}')
-    # advanced id search
-    id_input = request.args.get('id')
-
-    if kw_input != '':
-        kw_result = keyword_search(kw_input,bk_version)
-        kw_len = len(kw_result)
-    elif id_input != '':
+        print(f'Single verse search for: {bcv}')
+    # 1. kw search advanced (has no keyword)
+    if len(kw_input) > 0:
+        searchtext = kw_input
+        bcv = searchtext
+        print(f'Keyword search "{bcv}" ')
+        searchresult = keyword_search(kw_input,bk_version)
+        kw_len = len(searchresult)
+    # 2. id search 
+    elif len(id_input) > 0:
         kw_len = 0
         searchtext = id_input 
         bcv = get_bcv(searchtext)
         searchresult = dropdown_search(id_input,bk_version)
         print(f' "{id_input}" search result: {searchresult}')
-    else:
-        #default is dropdown search
+    # 3.a dropdown single search (default)
+    elif vs_end_input == '0': #dropdwn single search
         kw_len = 0
-        # TODO start changehere (=to func)
-        # searchtext = f'{bk_input} {ch_input}:{vs_input}'
         searchtext = dict([('bk',bk_input), ('ch',ch_input), ('vs',vs_input)])
-        # print(bcvid)
-        # utilities.get_bkcode(bcvid)
-        print(f'searchtext in results page: {searchtext}')
-        bk_id = book_id(bk_input)
-        ch_id = chapter_id(ch_input)
-        vs_id = chapter_id(vs_input)
-        vs_end_id = chapter_id(vs_end_input)
-        print(f'searchtext_id1 outside if: {bk_id}{ch_id}{vs_id}'  )     
-        print( f'searchtext_id2 outside if: {bk_id}{ch_id}{vs_end_id}')
+        print(f'Single searchtext in results page: {searchtext}')
+        searchtext_id = f'{bk_id}{ch_id}{vs_id}'
+        searchtext_id = get_bkcode(searchtext)
+        bcv = get_bcv(searchtext_id)
+        print(f'Convert {searchtext} to searchtext_id code: {searchtext_id}')
+        searchresult = dropdown_search(searchtext_id,bk_version)
+        searchresult = str(searchresult)
+    elif vs_end_input != '0': # 3b. dropdown multi search
+        kw_len = 0
+        searchtext = dict([('bk',bk_input), ('ch',ch_input), ('vs',vs_input)])
+        searchtext_id1 = f'{bk_id}{ch_id}{vs_id}' # can abstract this row
+        searchtext_id2 = f'{bk_id}{ch_id}{vs_end_id}'
+        print(f'Multi-verse searchtext in results page: {bcv}')
+        searchresult = dropdown_range_search(searchtext_id1,searchtext_id2,bk_version)
+        # for sr in searchresult:
+        #     print(sr) 
+    else:
+        print("**nothing found nothing to do.")
+        kw_len = 0
+        bcv = "NONE"
+        searchtext = "NONE"
+        searchresult = ["nothing comes up in results."]
+    print(f'Results are in: {searchresult}')
+    print(f'Results type: {type(searchresult)}')
 
-        # end changehere
-        if vs_end_id != '':
-            searchtext_id1 = f'{bk_id}{ch_id}{vs_id}' # can abstract this row
-            searchtext_id2 = f'{bk_id}{ch_id}{vs_end_id}'
-            print(f'searchtext_id1&2 inside changehere if: {searchtext_id1}-{searchtext_id2}')
-            # searchtext_id1 = get_bkcode(searchtext_id1)
-            # searchtext_id2 = get_bkcode(searchtext_id2)
-            print(f'Im i here? searchtext_id1&2 again in changehere if: {searchtext_id1}-{searchtext_id2}')
-
-            # bcv1 = get_bcv(searchtext_id1)
-            # bcv2 = get_bcv(searchtext_id2)
-            # bcv = f'{bcv1}-{bcv2[5:7]}'
-            print(f'print bcv in dropsearch: {bcv}')
-            searchresult = dropdown_range_search(searchtext_id1,searchtext_id2)
-            for sr in searchresult:
-                print(sr)    
-        else:
-            searchtext_id = f'{bk_id}{ch_id}{vs_id}'
-            searchtext_id = get_bkcode(searchtext)
-            bcv = get_bcv(searchtext_id)
-            print(f'convert {searchtext} to searchtext_id code: {searchtext_id}')
-            searchresult = dropdown_search(searchtext_id,bk_version)
-    # TODO: clean up return vars
-    return render_template("results.html", searchtext=searchtext, results=searchresult, booklist=booklist, kw_input=kw_input, kw_result=kw_result, kw_len=kw_len, id_input=id_input, id_result=id_result, bk_version=bk_version,bk_version_nm=bk_version_nm, bcv=bcv)
+            # TODO: clean up return vars  -put in dict kw_input is searchtext so use searchtext
+    return render_template("results.html", searchtext=searchtext, results=searchresult, booklist=booklist, kw_len=kw_len, id_input=id_input, id_result=id_result, bk_version=bk_version,bk_version_nm=bk_version_nm, bcv=bcv)
     
