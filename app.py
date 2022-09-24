@@ -57,7 +57,7 @@ def get_version_abbrev(vsn):
 def keyword_search(kw_input,bk_version):
     kw_result = []
     kresult = []
-    cmd = f'SELECT * FROM {bk_version} WHERE T LIKE "% {kw_input} %" '
+    cmd = f'SELECT * FROM {bk_version} WHERE T LIKE "% {kw_input}%" '
     cur = db_conn()
     kw_search = cur.execute(cmd)
     for k in kw_search.fetchall():
@@ -191,7 +191,7 @@ def results():
         bcv = get_bcv(searchtext_id)
         print(f'Convert {searchtext} to searchtext_id code: {searchtext_id}')
         searchresult = dropdown_search(searchtext_id,bk_version)
-        searchresult = str(searchresult)
+        searchresult = f'{searchresult}'
     elif vs_end_input != '0': # 3b. dropdown multi search
         kw_len = 0
         searchtext = dict([('bk',bk_input), ('ch',ch_input), ('vs',vs_input)])

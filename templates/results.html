@@ -11,7 +11,7 @@
     {% endfor %}
     </p>
 </div>
-{% elif '-' in bcv %}
+{% elif bvc|length < 8 %}
     <p>
     <h2>Default Search results for "{{bcv}}" in <i>{{bk_version_nm}}</i></h2> 
             {{results}}<br/>
