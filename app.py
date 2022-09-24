@@ -57,13 +57,13 @@ def get_version_abbrev(vsn):
 def keyword_search(kw_input,bk_version):
     kw_result = []
     kresult = []
-    cmd = f'SELECT * FROM {bk_version} WHERE T LIKE "%{kw_input}%" '
+    cmd = f'SELECT * FROM {bk_version} WHERE T LIKE "% {kw_input} %" '
     cur = db_conn()
     kw_search = cur.execute(cmd)
     for k in kw_search.fetchall():
         k1 = bookname(k[1])
         kw_result.append(f'{k1} {k[2]}:{k[3]} {k[4]}')
-    print(f'keyword "{kw_input}" result count: {len(kw_result)}')
+    print(f'keyword "{kw_input}" mentioned {len(kw_result)} times.')
     for count, i in enumerate(kw_result):
         count +=1
         kresult.append(f'{count}.) {i}')
