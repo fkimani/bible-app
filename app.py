@@ -69,7 +69,7 @@ def keyword_search(kw_input,bk_version):
         kresult.append(f'{count}.) {i}')
     if kresult != "":
         return kresult
-    else: return 
+    else: return "nothing found"
 # DROPDOWN search:
 def dropdown_search(id_input, bk_version):
     if len(id_input) != 8:
@@ -93,9 +93,11 @@ def dropdown_range_search(id_input1,id_input2,bk_version):
         cmd = f'SELECT * from {bk_version} where id BETWEEN {id_input1} AND {id_input2} '  # vs range
         result = cur.execute(cmd)
         id_rslt = result.fetchall()
-        id_result = []
+        # id_result = []
+        id_result = ""
         for idr in id_rslt:
-            id_result.append(f'{bookname(idr[1])} {idr[2]}:{idr[3]}: {idr[4]}')
+            # id_result.append(f'{bookname(idr[1])} {idr[2]}:{idr[3]}: {idr[4]}')
+            id_result += (f' {idr[3]}. {idr[4]}')
     return id_result
 # convert code to bcv : 01001002 -> Gen 1:2
 def get_bcv(id_input):
@@ -167,6 +169,7 @@ def results():
     else:
         bcv = f'{bk_input} {ch_input}:{vs_input}'
         print(f'Single verse search for: {bcv}')
+    search_vars={('id',id_input),('kw',kw_input), (bcv,bcv)}
     # 1. kw search advanced (has no keyword)
     if len(kw_input) > 0:
         searchtext = kw_input
@@ -208,8 +211,6 @@ def results():
         searchtext = "NONE"
         searchresult = ["nothing comes up in results."]
     print(f'Results are in: {searchresult}')
-    print(f'Results type: {type(searchresult)}')
-
-            # TODO: clean up return vars  -put in dict kw_input is searchtext so use searchtext
-    return render_template("results.html", searchtext=searchtext, results=searchresult, booklist=booklist, kw_len=kw_len, id_input=id_input, id_result=id_result, bk_version=bk_version,bk_version_nm=bk_version_nm, bcv=bcv)
+    # TODO: clean up return vars  -put in dict kw_input is searchtext so use searchtext
+    return render_template("results.html", search_vars=search_vars, searchtext=searchtext, results=searchresult, booklist=booklist, kw_len=kw_len, id_input=id_input, id_result=id_result, bk_version=bk_version,bk_version_nm=bk_version_nm, bcv=bcv)
     
