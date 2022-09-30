@@ -10,25 +10,25 @@
     </select>
     <h2>Dropdown Search:</h2>
     <label for="book_label">Book:</label>
-    <select id="bk" name="bk">
+    <select id="bk" name="bk" onfocus="reset_fields('kw','ID'); ">
         {% for book in books %}
         <option value="{{ book }}">{{ book }}</option>
         {% endfor %}
     </select>
     <label for="chapter">Chapter:</label>
-    <select id="ch" name="ch">
+    <select id="ch" name="ch" onfocus="reset_fields('kw','ID'); ">
         {% for ch in range(1,chaptercount) %}
         <option value="{{ch}}">{{ch}}</option>
         {% endfor %}
     </select>
     <label for="verse">Verse:</label>
-    <select id="vs" name="vs">
+    <select id="vs" name="vs" onfocus="reset_fields('kw','ID'); ">
         {% for vs in range(1,versecount) %}
         <option value="{{vs}}">{{vs}}</option>
         {% endfor %}
     </select>
     <label for="verse_end">To:</label>
-    <select id="vs_end" name="vs_end">
+    <select id="vs_end" name="vs_end" onfocus="reset_fields('kw','ID'); ">
         <option value="0"></option>
         {% for vs in range(1,versecount) %}
         <option value="{{vs}}">{{vs}}</option>
@@ -36,16 +36,16 @@
     </select>
     <p>
         <h2>Keyword Search:</h2>
-        <input type="text" name="kw" placeholder="King David" id="kw" maxlength="24" onfocus="reset_field('ID')"><input type="button" value="Reset" onclick="location.href='/'">
+        <input type="text" name="kw" placeholder="King David" id="kw" maxlength="24" onfocus="reset_field('ID')">
     </p>
     <p>
         <h2>ID Search(Advanced):</h2>
         <label for="idsearch">Enter 8 digit ID:</label>
-        <input type="text" name="id" placeholder="01001001" id="ID" maxlength="8" onfocus="reset_field('kw')">
+        <input type="number" name="id" placeholder="01001001" id="ID" maxlength="8" onfocus="reset_field('kw')">
     </p>
     <br />
     <br/>
-    <input type="submit" id="submit_btn">
+    <input type="submit" id="submit_btn"> <input type="button" value="Reset" onclick="location.href='/'">
 </form>
 <script>
     // reset function definition
@@ -54,4 +54,12 @@
         console.log(`cursor onfocus has reset ${current_input} in ${some_id} field.`);
         document.getElementById(some_id).value = ""
     }  
+    // reset multiple fields (use case dropdown search to reset kw and id fields)
+    var reset_fields = function(field1, field2){
+        current_input1 = document.getElementById(field1).value;
+        current_input2 = document.getElementById(field2).value;
+        console.log(`Resetting these fields: ${field1}: ${current_input1}; ${field1}: ${current_input2}`);
+        reset_field(field1);
+        reset_field(field2); 
+    }
 </script>
