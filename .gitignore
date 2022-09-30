@@ -2,3 +2,8 @@ bible-sqlite.db
 env/*
 .vscode/ 
 __pycache__/
+results.py
+utilities.py
+*_test.py
+notes.md
+query-test.py

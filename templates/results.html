@@ -1,0 +1,33 @@
+<title>{{bcv}} | {{bk_version_nm}} </title>
+<h1>Bible Search App</h1>
+<!-- Kw search -->
+{% if kw_len > 0 %}
+<div>
+    <p><input type="submit" name="refine" value="Refine Search" onclick="javascript:history.back()">
+        <input type="submit" name="newsearch" value="New Search" onclick="location.href='/'"></p>
+    <p>
+    <h2>{{kw_len}} Keyword search results for "{{ searchtext }}" in {{bk_version_nm}}:</h2>
+    {% for kwr in results %}
+    {{kwr}} <br />
+    {% endfor %}
+    </p>
+<!-- id search -->
+{% elif search_vars['id']|length < 8 %}
+    <p>
+    <h2>Search results for "{{bcv}}" in <i>{{bk_version_nm}}</i></h2> 
+            {{results}}<br/>
+    </p> 
+<!-- dropdown -->
+{% else %}
+    <p>
+    <h2>Search results for "{{bcv}}" in <i>{{bk_version_nm}}</i></h2> 
+        {% for re in results %}
+            {{re}}<br/>
+        {% endfor %}
+    </p>
+{% endif %}
+
+<br />
+<p><input type="submit" name="refine" value="Refine Search" onclick="javascript:history.back()">
+    <input type="submit" name="newsearch" value="New Search" onclick="location.href='/'"></p>
+</div>
