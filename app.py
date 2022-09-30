@@ -202,8 +202,6 @@ def results():
         searchtext_id2 = f'{bk_id}{ch_id}{vs_end_id}'
         print(f'Multi-verse searchtext in results page: {bcv}')
         searchresult = dropdown_range_search(searchtext_id1,searchtext_id2,bk_version)
-        # for sr in searchresult:
-        #     print(sr) 
     else:
         print("**nothing found nothing to do.")
         kw_len = 0
