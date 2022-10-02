@@ -97,7 +97,7 @@ def dropdown_range_search(id_input1,id_input2,bk_version):
         id_result = ""
         for idr in id_rslt:
             # id_result.append(f'{bookname(idr[1])} {idr[2]}:{idr[3]}: {idr[4]}')
-            id_result += (f' {idr[3]}. {idr[4]}')
+            id_result += (f' {idr[3]} {idr[4]}')
     return id_result
 # convert code to bcv : 01001002 -> Gen 1:2
 def get_bcv(id_input):

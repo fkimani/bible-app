@@ -1,5 +1,5 @@
 <title>Search App Home</title>
-<form method="GET" action="/results">
+<form name="searchform" method="GET" action="/results">
     <p><label>Dropdown Search </label>| <label>Keyword Search </label> | <label>ID Search(Advanced) </label></p>
     <label for="sel_ver">Select Version:</label>
     <select id="ver" name="version">
@@ -41,11 +41,11 @@
     <p>
         <h2>ID Search(Advanced):</h2>
         <label for="idsearch">Enter 8 digit ID:</label>
-        <input type="number" name="id" placeholder="01001001" id="ID" maxlength="8" onfocus="reset_field('kw')">
+        <input type="number" name="id" placeholder="01001001" id="ID" maxlength="8" minlength="8" min="0" onfocus="reset_field('kw')">
     </p>
     <br />
     <br/>
-    <input type="submit" id="submit_btn"> <input type="button" value="Reset" onclick="location.href='/'">
+    <input type="submit" id="submit_btn" onclick="return validate_form()"> <input type="button" value="Reset" onclick="location.href='/'">
 </form>
 <script>
     // reset function definition
@@ -62,4 +62,14 @@
         reset_field(field1);
         reset_field(field2); 
     }
+    // validate form
+    var validate_form = function(){
+        id = 'ID'
+        let input_id = document.getElementById(id).value
+        if (input_id.length > 0 && input_id.length < 8){
+            console.log(`ERROR: ${input_id} field value smaller than 8 digits!`)
+            alert(`ERROR: ${input_id} field value smaller than 8 digits!`)
+            return false;
+        }
+    };
 </script>
