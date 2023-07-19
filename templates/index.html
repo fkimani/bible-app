@@ -34,7 +34,7 @@
     <body>
         <form name="searchform" method="GET" action="/results" class="row gx-3 gy-2 align-items-center">
             <div class="col-sm-3">
-               <label for="sel_ver"><h2>Select Version:</h2></label>
+               <label for="sel_ver"><h3>Select Version:</h3></label>
                 <select class="form-select" aria-label="Default select example" id="ver" name="version">
                     <option value="t_kjv">KJV: King James Version</option>
                     {% for v in versions %}
@@ -42,52 +42,59 @@
                     {% endfor %}
                 </select>
             </div>
-            <h2>Dropdown Search:</h2>
+            <h3>Dropdown Search:</h3>
             <div class="col-sm-3">
-            <label for="book_label">Book:</label>
+            <!-- <label for="book_label">Book:</label> -->
             <select  class="form-select" aria-label="Default select example" id="bk" name="bk" onfocus="reset_fields('kw','ID'); ">
+                <option value="book">Book</option>
                 {% for book in books %}
                 <option value="{{ book }}">{{ book }}</option>
                 {% endfor %}
             </select>
             </div>
             <div class="col-sm-3">
-            <label for="chapter">Chapter:</label>
+            <!-- <label for="chapter">Chapter:</label> -->
             <select class="form-select" aria-label="Default select example" id="ch" name="ch" onfocus="reset_fields('kw','ID'); ">
+                <option value="chapter">Chapter</option>
                 {% for ch in range(1,chaptercount) %}
                 <option value="{{ch}}">{{ch}}</option>
                 {% endfor %}
             </select>
             </div>
             <div class="col-sm-1">
-            <label for="verse">Verse:</label>
+            <!-- <label for="verse">Verse:</label> -->
             <select class="form-select" aria-label="Default select example" id="vs" name="vs" onfocus="reset_fields('kw','ID'); ">
+                <option value="verse">Verse</option>
                 {% for vs in range(1,versecount) %}
                 <option value="{{vs}}">{{vs}}</option>
                 {% endfor %}
             </select>
             </div>
             <div class="col-sm-1">
-            <label for="verse_end">To:</label>
+            <!-- <label for="verse_end">To:</label> -->
             <select class="form-select" aria-label="Default select example" id="vs_end" name="vs_end" onfocus="reset_fields('kw','ID'); ">
-                <option value="0"></option>
+                <option value="0">To</option>
                 {% for vs in range(1,versecount) %}
                 <option value="{{vs}}">{{vs}}</option>
                 {% endfor %}
             </select>
             </div>
             <div class="col-sm-3">
+                <label for="submit"></label><br/>
                 <button type="submit" class="btn btn-primary" value="Search" id="submit" onsubmit="return validate_form()">Search</button>
             </div>
 
              <!-- keyword search -->
+             <h3>Keyword Search</h3>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon3">Keyword Search:</span>
                 <input type="text" name="kw" placeholder="King David" id="kw" maxlength="24" minlength="2" onfocus="reset_field('ID')" class="form-control" aria-label="Keyword Search" aria-describedby="basic-addon2">
+                <button type="submit" class="btn btn-primary" onclick="return validate_form()">Search</button>
               </div>
             <!-- /keyword search -->
 
             <!-- ID search -->
+            <h3>ID Search</h3>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon3">ID Search(Advanced):</span>
                 <input type="number" name="id" placeholder="01001001" id="ID" maxlength="8" minlength="8" min="01001001" max="66022021" onfocus="reset_field('kw')" class="form-control" aria-label="Id Search" aria-describedby="basic-addon3">
