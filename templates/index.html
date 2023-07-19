@@ -98,11 +98,10 @@
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon3">ID Search(Advanced):</span>
                 <input type="number" name="id" placeholder="01001001" id="ID" maxlength="8" minlength="8" min="01001001" max="66022021" onfocus="reset_field('kw')" class="form-control" aria-label="Id Search" aria-describedby="basic-addon3">
+                <button type="submit" class="btn btn-primary" onclick="return validate_form()">Search</button>
             </div>
             <!-- /ID search -->
 
-            <br/>
-            <button type="submit" class="btn btn-primary" onclick="return validate_form()">Submit</button>
         </form>
         <script>
             // reset function definition
