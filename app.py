@@ -53,6 +53,7 @@ def get_version_abbrev(vsn):
         if vsn in a[1]:
             abbrev = a[2]
     return abbrev
+    images['cover'].append(pic.path_thumb_l)
 # KEYWORD search: vsn default set in frontend (t_kjv)
 def keyword_search(kw_input,bk_version):
     kw_result = []
@@ -149,6 +150,7 @@ def results():
     bcv = ''
     # TODO: if can abstract some of it in func or put vars in dict
     # results object vars
+    print("REQUEST ARGS: ",request.args)
     kw_input = request.args.get('kw')
     bk_version = request.args.get('version')
     bk_version_nm = get_version_abbrev(bk_version)
@@ -158,7 +160,11 @@ def results():
     vs_end_input = request.args.get('vs_end')
     id_input = request.args.get('id')
     # format vars 
+
+    if bk_input == None:
+        bk_input  = 'Genesis'
     bk_id = book_id(bk_input)
+
     ch_id = chapter_id(ch_input)
     vs_id = chapter_id(vs_input)
     vs_end_id = chapter_id(vs_end_input)
@@ -171,14 +177,15 @@ def results():
         print(f'Single verse search for: {bcv}')
     search_vars={('id',id_input),('kw',kw_input), (bcv,bcv)}
     # 1. kw search advanced (has no keyword)
-    if len(kw_input) > 0:
+    if kw_input != None: #if len(kw_input) > 0:
         searchtext = kw_input
         bcv = searchtext
         print(f'Keyword search "{bcv}" ')
         searchresult = keyword_search(kw_input,bk_version)
         kw_len = len(searchresult)
     # 2. id search 
-    elif len(id_input) > 0:
+    # elif len(id_input) > 0:
+    elif id_input != None:
         kw_len = 0
         searchtext = id_input 
         bcv = get_bcv(searchtext)
