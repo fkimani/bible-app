@@ -1,75 +1,193 @@
-<title>Search App Home</title>
-<form name="searchform" method="GET" action="/results">
-    <p><label>Dropdown Search </label>| <label>Keyword Search </label> | <label>ID Search(Advanced) </label></p>
-    <label for="sel_ver">Select Version:</label>
-    <select id="ver" name="version">
-        <option value="t_kjv">KJV: King James Version</option>
-        {% for v in versions %}
-        <option value="{{v[1]}}">{{v[2]}}: {{ v[4] }}</option>
-        {% endfor %}
-    </select>
-    <h2>Dropdown Search:</h2>
-    <label for="book_label">Book:</label>
-    <select id="bk" name="bk" onfocus="reset_fields('kw','ID'); ">
-        {% for book in books %}
-        <option value="{{ book }}">{{ book }}</option>
-        {% endfor %}
-    </select>
-    <label for="chapter">Chapter:</label>
-    <select id="ch" name="ch" onfocus="reset_fields('kw','ID'); ">
-        {% for ch in range(1,chaptercount) %}
-        <option value="{{ch}}">{{ch}}</option>
-        {% endfor %}
-    </select>
-    <label for="verse">Verse:</label>
-    <select id="vs" name="vs" onfocus="reset_fields('kw','ID'); ">
-        {% for vs in range(1,versecount) %}
-        <option value="{{vs}}">{{vs}}</option>
-        {% endfor %}
-    </select>
-    <label for="verse_end">To:</label>
-    <select id="vs_end" name="vs_end" onfocus="reset_fields('kw','ID'); ">
-        <option value="0"></option>
-        {% for vs in range(1,versecount) %}
-        <option value="{{vs}}">{{vs}}</option>
-        {% endfor %}
-    </select>
-    <p>
-        <h2>Keyword Search:</h2>
-        <input type="text" name="kw" placeholder="King David" id="kw" maxlength="24" minlength="2" onfocus="reset_field('ID')">
-    </p>
-    <p>
-        <h2>ID Search(Advanced):</h2>
-        <label for="idsearch">Enter 8 digit ID:</label>
-        <input type="number" name="id" placeholder="01001001" id="ID" maxlength="8" minlength="8" min="01001001" max="66022021" onfocus="reset_field('kw')">
-    </p>
-    <br />
-    <br/>
-    <input type="submit" id="submit_btn" onclick="return validate_form()"> <input type="button" value="Reset" onclick="location.href='/'">
-</form>
-<script>
-    // reset function definition
-    var reset_field = function(some_id){
-        current_input = document.getElementById(some_id).value
-        console.log(`cursor onfocus has reset ${current_input} in ${some_id} field.`);
-        document.getElementById(some_id).value = ""
-    }  
-    // reset multiple fields (use case dropdown search to reset kw and id fields)
-    var reset_fields = function(field1, field2){
-        current_input1 = document.getElementById(field1).value;
-        current_input2 = document.getElementById(field2).value;
-        console.log(`Resetting these fields: ${field1}: ${current_input1}; ${field2}: ${current_input2}`);
-        reset_field(field1);
-        reset_field(field2); 
-    }
-    // validate form
-    var validate_form = function(){
-        id = 'ID'
-        let input_id = document.getElementById(id).value
-        if (input_id.length > 0 && input_id.length < 8){
-            console.log(`ERROR: ${input_id} field value smaller than 8 digits!`)
-            alert(`ERROR: ${input_id} field value smaller than 8 digits!`)
-            return false;
-        }
-    };
-</script>
+<html>
+    <head>
+        <title>Bible Search App</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="" crossorigin="">
+        <link rel="stylesheet" href="https://getbootstrap.com/docs/5.3/assets/css/docs.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body style="padding:0 20px;">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+            <div class="container-fluid">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars" viewBox="0 0 16 16">
+                    <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882V2.5zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5h-1zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V4zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5V3zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V14zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V14z"/>
+                </svg>
+            <a class="navbar-brand" href="#"> Bible Search App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#dropdown_search">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#keyword_search">Keyword Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#id_search">Id Search</a>
+                </li>
+                </ul>
+            </div>
+            </div>
+        </nav>
+        <!-- End Nav -->
+        <div class="accordion-body"><p>Select a search option from one of the 3 dropdowns below to begin your search.</p></div>
+        <!-- Accordion feature -->
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                <h4 id="dropdown_search">Dropdown Search</h4>
+                </button>
+              </h2>
+              <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                 <form name="searchform" method="GET" action="/results" class="row gx-3 gy-2 align-items-center">
+                    <div class="accordion-body">Select from the dropdowns below to search.</div>
+                    <div class="col-sm-3">
+                         <select class="form-select" aria-label="Default select example" id="ver" name="version">
+                             <option value="t_kjv">KJV: King James Version</option>
+                             {% for v in versions %}
+                             <option value="{{v[1]}}">{{v[2]}}: {{ v[4] }}</option>
+                             {% endfor %}
+                         </select>
+                     </div>
+                    <div class="col-sm-2">
+                    <!-- <label for="book_label">Book:</label> -->
+                    <select required class="form-select" aria-label="Default select example" id="bk" name="bk" onfocus="reset_fields('kw','ID'); ">
+                        <option value="">Book</option>
+                        {% for book in books %}
+                        <option value="{{ book }}">{{ book }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="col-sm-2">
+                    <!-- <label for="chapter">Chapter:</label> -->
+                    <select required class="form-select" aria-label="Default select example" id="ch" name="ch" onfocus="reset_fields('kw','ID'); ">
+                        <option value="">Chapter</option>
+                        {% for ch in range(1,chaptercount) %}
+                        <option value="{{ch}}">{{ch}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="col-sm-1">
+                    <!-- <label for="verse">Verse:</label> -->
+                    <select required class="form-select" aria-label="Default select example" id="vs" name="vs" onfocus="reset_fields('kw','ID'); ">
+                        <option value="">Verse</option>
+                        {% for vs in range(1,versecount) %}
+                        <option value="{{vs}}">{{vs}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="col-sm-1">
+                    <!-- <label for="verse_end">To:</label> -->
+                    <select class="form-select" aria-label="Default select example" id="vs_end" name="vs_end" onfocus="reset_fields('kw','ID'); ">
+                        <option value="0">To</option>
+                        {% for vs in range(1,versecount) %}
+                        <option value="{{vs}}">{{vs}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="submit" class="btn btn-primary" value="Search" id="submit" onsubmit="return validate_form()">Search</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+        </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                  <h4 id="">Keyword Search</h4>
+                </button>
+              </h2>
+              <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    <!-- keyword search -->
+                    <form name="searchform" method="GET" action="/results" class="row gx-3 gy-2 align-items-center">
+                        <h3 id="keyword_search">Keyword Search</h3>
+                        <div class="col-sm-3">
+                            <select class="form-select" aria-label="Default select example" id="ver" name="version">
+                                <option value="t_kjv">KJV: King James Version</option>
+                                {% for v in versions %}
+                                <option value="{{v[1]}}">{{v[2]}}: {{ v[4] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">Keyword</span>
+                            <input required type="text" name="kw" placeholder="King David" id="kw" maxlength="24" minlength="2" onfocus="reset_field('ID')" class="form-control" aria-label="Keyword Search" aria-describedby="basic-addon2">
+                            <button type="submit" class="btn btn-primary" onclick="return validate_form()">Search</button>
+                        </div>
+                    </form>
+                    <!-- /keyword search -->
+                    </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                  <h4 id="id_search">ID Search</h4>
+                </button>
+              </h2>
+              <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    <!-- ID search -->
+                    <form name="searchform" method="GET" action="/results" class="row gx-3 gy-2 align-items-center">
+                        <!-- <h3>ID Search</h3> -->
+                        <div class="col-sm-3">
+                             <select class="form-select" aria-label="Default select example" id="ver" name="version">
+                                 <option value="t_kjv">KJV: King James Version</option>
+                                 {% for v in versions %}
+                                 <option value="{{v[1]}}">{{v[2]}}: {{ v[4] }}</option>
+                                 {% endfor %}
+                             </select>
+                         </div>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon3">ID</span>
+                        <input required type="number" name="id" placeholder="01001001" id="ID" maxlength="8" minlength="8" min="01001001" max="66022021" onfocus="reset_field('kw')" class="form-control" aria-label="Id Search" aria-describedby="basic-addon3">
+                        <button type="submit" class="btn btn-primary" onclick="return validate_form()">Search</button>
+                    </div>
+                    </form>
+                    <!-- /ID search -->
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- /Accordion feature -->
+        <script>
+            // reset function definition
+            var reset_field = function(some_id){
+                current_input = document.getElementById(some_id).value
+                console.log(`cursor onfocus has reset ${current_input} in ${some_id} field.`);
+                document.getElementById(some_id).value = ""
+            }  
+            // reset multiple fields (use case dropdown search to reset kw and id fields)
+            var reset_fields = function(field1, field2){
+                current_input1 = document.getElementById(field1).value;
+                current_input2 = document.getElementById(field2).value;
+                console.log(`Resetting these fields: ${field1}: ${current_input1}; ${field2}: ${current_input2}`);
+                reset_field(field1);
+                reset_field(field2); 
+            }
+            // validate form
+            var validate_form = function(){
+                id = 'ID'
+                let input_id = document.getElementById(id).value
+                if (input_id.length > 0 && input_id.length < 8){
+                    console.log(`ERROR: ${input_id} field value smaller than 8 digits!`)
+                    alert(`ERROR: ${input_id} field value smaller than 8 digits!`)
+                    return false;
+                }
+            };
+        </script>
+        <footer>
+            <div class="card">
+                <div class="card-body">
+                  <!-- <h5 class="card-title">Thank you for visting us. </h5> -->
+                  <p class="card-text">&copy;FK Copyright 2023.</p>
+                </div>
+              </div>
+        </footer>
+    </body>
+</html>
